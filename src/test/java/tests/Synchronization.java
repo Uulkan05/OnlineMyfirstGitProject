@@ -6,6 +6,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.TestInstance;
@@ -17,23 +19,24 @@ public class Synchronization {
 
  @BeforeMethod
  public void setUp(){
-     WebDriverManager.chromedriver().setup();
-     driver = new ChromeDriver();
-     driver.get ("https://www.alaskaair.com/");
-     driver.manage().window().maximize();
-     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-     driver.manage().deleteAllCookies();
-
+     System.setProperty("webdriver.chrome.driver","C:\\Users\\Uulkan\\Documents\\selenium dependecies\\drivers\\chromedriver.exe");
+     WebDriver driver=new ChromeDriver();
+     //	driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+     driver.get("https://alaskatrips.poweredbygps.com/g/pt/hotels?MDPCID=ALASKA-US.TPS.BRAND.hotels.HOTEL");
  }
  @Test
  public  void test1 () throws InterruptedException {
-     driver.findElement(By.cssSelector(".defaultnav-opennav-menu-open")).click();
-     driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
-     driver.findElement(By.id("navBookHotels")).click();
-     WebElement destination = driver.findElement(By.xpath("//input[@placeholder='Where do you need a hotel?']"));
-     destination.sendKeys("New York");
-     destination.sendKeys(Keys.TAB);
-     System.out.println (destination.getText());
+     driver.findElement(By.id("H-destination")).sendKeys("nyc");
+     driver.findElement(By.id("H-destination")).sendKeys(Keys.TAB);
+     driver.findElement(By.id("H-fromDate")).sendKeys(Keys.ENTER);
+
+     WebDriverWait d=new WebDriverWait(driver,20);
+     d.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@id='resultsContainer']/section/article[1]")));
+     //Thread.sleep(5000L);
+
+     driver.findElement(By.xpath("//div[@id='resultsContainer']/section/article[1]")).click();
+
+
      driver.quit();
  }
 }
